@@ -1,0 +1,86 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:base",
+        ":combinePatchMinorReleases",
+        ":disableRateLimiting",
+        ":enableVulnerabilityAlertsWithLabel(Triage)",
+        ":ignoreUnstable",
+        ":maintainLockFilesWeekly",
+        ":pinAllExceptPeerDependencies",
+        ":rebaseStalePrs",
+        ":semanticCommits",
+        ":separateMultipleMajorReleases",
+        "npm:unpublishSafe",
+        "regexManagers:dockerfileVersions",
+        "replacements:all"
+    ],
+    "dependencyDashboardAutoclose": true,
+    "gitLabIgnoreApprovals": true,
+    "platformAutomerge": true,
+    "ignoreScripts": true,
+    "rollbackPrs": true,
+    "packageRules": [
+        {
+            "matchPackageNames": [
+                "aws-sdk",
+                "boto3",
+                "botocore"
+            ],
+            "schedule": [
+                "after 1am on a Sunday"
+            ],
+            "groupName": "aws-dependencies"
+        },
+        {
+            "matchUpdateTypes": [
+                "minor",
+                "patch",
+                "pin",
+                "digest"
+            ],
+            "automerge": true
+        },
+        {
+            "matchFiles": [
+                ".gitlab-ci.yml"
+            ],
+            "matchPackageNames": [
+                "renovate/renovate"
+            ],
+            "matchUpdateTypes": [
+                "digest"
+            ],
+            "enabled": false
+        }
+    ],
+    "regexManagers": [
+        {
+            "fileMatch": [
+                "(?:^|/)Dockerfile[^/]*$"
+            ],
+            "matchStrings": [
+                "FROM\\s+(?:--platform=linux\\/[^\\s]+\\s+)?(?:\\${REGISTRY_PROXY-?})?(?<depName>[^:\\s]+?):(?<currentValue>[a-z0-9.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?(?:\\s|$)"
+            ],
+            "datasourceTemplate": "docker",
+            "versioningTemplate": "docker"
+        },
+        {
+            "fileMatch": [
+                "(?:^|/)(?:docker-)?compose[^/]*\\.ya?ml$"
+            ],
+            "matchStrings": [
+                "image:\\s+(?:\\${REGISTRY_PROXY-?})?(?<depName>[^:]+?):(?<currentValue>[a-z0-9.-]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?(?:\\s|$)"
+            ],
+            "datasourceTemplate": "docker",
+            "versioningTemplate": "docker"
+        }
+    ],
+    "npmrc": "@example:registry=https://gitlab.example/api/v4/projects/xxx/packages/npm/",
+    "registryAliases": {
+        "$CI_REGISTRY": "registry.gitlab.example",
+        "${CI_REGISTRY}": "registry.gitlab.example",
+        "$CI_TEMPLATE_REGISTRY_HOST": "registry.gitlab.com",
+        "${CI_TEMPLATE_REGISTRY_HOST}": "registry.gitlab.com"
+    }
+}
