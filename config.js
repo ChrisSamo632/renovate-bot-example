@@ -10,18 +10,6 @@ module.exports = {
         matchHost: 'registry.gitlab.example',
         username: process.env.CI_REGISTRY_USER,
         password: process.env.CI_REGISTRY_PASSWORD
-    },
-    {
-        hostType: 'docker',
-        matchHost: 'gitlab.example:443',
-        username: process.env.CI_DEPENDENCY_PROXY_USER,
-        password: process.env.CI_DEPENDENCY_PROXY_PASSWORD
-    },
-    {
-        hostType: 'docker',
-        matchHost: 'gitlab.example',
-        username: process.env.CI_DEPENDENCY_PROXY_USER,
-        password: process.env.CI_DEPENDENCY_PROXY_PASSWORD
     }
     ]
 };
